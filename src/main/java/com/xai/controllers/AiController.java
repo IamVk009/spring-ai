@@ -1,6 +1,7 @@
 package com.xai.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +32,7 @@ public class AiController {
     /**
      * Auto-configured Spring AI client for interacting with OpenAI chat models.
      */
-    private final OpenAiChatModel openAiChatModel;
+    private final ChatClient.Builder chatClientBuilder;
 
     /**
      * Sends the user prompt to the OpenAI model and returns its response.
@@ -41,6 +42,6 @@ public class AiController {
      */
     @GetMapping
     public ResponseEntity<String> askOpenAi(@RequestParam String prompt) {
-        return ResponseEntity.ok(this.openAiChatModel.call(prompt));
+        return ResponseEntity.ok(this.chatClientBuilder.build().prompt(prompt).call().content());
     }
 }
