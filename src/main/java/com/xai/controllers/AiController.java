@@ -32,7 +32,7 @@ public class AiController {
     /**
      * Auto-configured Spring AI client for interacting with OpenAI chat models.
      */
-    private final ChatClient.Builder chatClientBuilder;
+    private final ChatClient chatClient;
 
     /**
      * Sends the user prompt to the OpenAI model and returns its response.
@@ -42,6 +42,6 @@ public class AiController {
      */
     @GetMapping
     public ResponseEntity<String> askOpenAi(@RequestParam String prompt) {
-        return ResponseEntity.ok(this.chatClientBuilder.build().prompt(prompt).call().content());
+        return ResponseEntity.ok(this.chatClient.prompt(prompt).call().content());
     }
 }
