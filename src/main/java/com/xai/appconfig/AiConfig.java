@@ -7,40 +7,47 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Spring configuration class for initializing {@link ChatClient} beans
- * backed by different LLM providers (OpenAI and Ollama) using Spring AI.
+ * Spring configuration for creating {@link ChatClient} beans backed by
+ * OpenAI's LLMs via Spring AI.
  *
- * <p>
- * Each ChatClient is constructed from a specific ChatModel implementation:
+ * <p>This configuration provides a single {@link ChatClient} instance that
+ * delegates to an {@link OpenAiChatModel}, allowing the application to
+ * interact with OpenAI-powered chat models through Spring AI's abstraction.</p>
+ *
+ * <h2>Overview</h2>
  * <ul>
- *     <li>{@link OpenAiChatModel} → communicates with OpenAI’s hosted LLMs.</li>
+ *     <li>{@link OpenAiChatModel} – the underlying model implementation used
+ *     to communicate with OpenAI’s LLM APIs.</li>
+ *     <li>{@link ChatClient} – a high-level Spring AI client used to send
+ *     prompts and receive responses.</li>
  * </ul>
- * </p>
  *
- * <p>
- * This configuration demonstrates how to expose multiple LLM clients in the same
- * Spring Boot application with minimal code, allowing the application to select
- * or switch models as needed.
- * </p>
+ * <p>By exposing the {@link ChatClient} as a Spring bean, it can be injected
+ * wherever conversational AI functionality is required within the application.</p>
  */
 @Configuration
 @RequiredArgsConstructor
 public class AiConfig {
 
     /**
-     * Model client for interacting with OpenAI LLMs.
+     * The model used to communicate with OpenAI’s chat-based LLM endpoints.
      */
     private final OpenAiChatModel openAiChatModel;
 
     /**
-     * Creates a ChatClient backed by OpenAI's chat model.
+     * Creates a {@link ChatClient} bean backed by the configured
+     * {@link OpenAiChatModel}.
      *
-     * @return ChatClient instance configured for OpenAI
+     * <p>This client provides a convenient abstraction for sending prompts to
+     * OpenAI and handling responses within Spring-based components.</p>
+     *
+     * @return a configured {@link ChatClient} instance
      */
     @Bean
     public ChatClient chatClient() {
         return ChatClient.builder(openAiChatModel).build();
     }
 }
+
 
 

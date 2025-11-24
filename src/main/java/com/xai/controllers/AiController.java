@@ -3,7 +3,6 @@ package com.xai.controllers;
 import com.xai.services.AiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,24 +10,27 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * REST controller exposing endpoints to interact with multiple LLM providers
- * (OpenAI and Ollama) using Spring AI’s {@link ChatClient}.
+ * REST controller exposing endpoints for interacting with LLM providers
+ * through Spring AI’s {@link ChatClient}.
  *
- * <p>
- * Each {@code ChatClient} instance is backed by a different ChatModel
- * implementation. For example:
+ * <p>This controller demonstrates how a Spring Boot application can use
+ * Spring AI to communicate with large language models in a clean,
+ * provider-agnostic manner. Although multiple LLM providers can be configured
+ * in the application, this controller exposes an endpoint backed by the
+ * OpenAI-powered {@link ChatClient} via {@link AiService}.</p>
+ *
+ * <h2>LLM Provider Overview</h2>
  * <ul>
- *     <li>{@code openAiChatClient} uses the {@code OpenAiChatModel} to communicate
- *     with OpenAI’s hosted LLMs.</li>
- *     <li>{@code ollamaChatClient} uses the {@code OllamaChatModel} to interact
- *     with locally hosted or self-hosted models via Ollama.</li>
+ *     <li><strong>OpenAI</strong> – accessed through the configured
+ *     {@link ChatClient} which uses {@code OpenAiChatModel} underneath.</li>
+ *     <li><strong>Ollama</strong> – also supported by the application
+ *     (if configured), enabling requests to local or self-hosted models.</li>
  * </ul>
- * </p>
  *
  * <p>
- * This demonstrates how Spring AI enables seamless integration with multiple LLM
- * providers in the same Spring Boot application, while keeping the code minimal,
- * clean, and provider-agnostic.
+ * This controller stays intentionally minimal and delegates model selection and
+ * execution logic to {@link AiService}, keeping the REST layer lightweight and
+ * focused on request/response handling.
  * </p>
  */
 @RestController
@@ -38,18 +40,22 @@ public class AiController {
 
     /**
      * ChatClient configured to communicate with OpenAI's chat models.
+     * Injected through constructor-based dependency injection.
      */
     private final ChatClient chatClient;
 
+    /**
+     * Service layer responsible for interacting with the LLMs.
+     */
     private final AiService aiService;
 
     /**
-     * Sends a prompt to the OpenAI-backed ChatClient.
+     * Sends a prompt to the OpenAI-backed {@link ChatClient}.
      *
-     * @param prompt text input from the user
-     * @return OpenAI-generated response
+     * @param prompt the user-provided input text
+     * @return the LLM-generated response wrapped in {@link ResponseEntity}
      */
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<String> askOpenAi(@RequestParam String prompt) {
         return ResponseEntity.ok(aiService.chat(prompt));
     }
