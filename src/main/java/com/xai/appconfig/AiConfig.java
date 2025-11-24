@@ -2,7 +2,6 @@ package com.xai.appconfig;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +14,6 @@ import org.springframework.context.annotation.Configuration;
  * Each ChatClient is constructed from a specific ChatModel implementation:
  * <ul>
  *     <li>{@link OpenAiChatModel} → communicates with OpenAI’s hosted LLMs.</li>
- *     <li>{@link OllamaChatModel} → communicates with locally hosted models via Ollama.</li>
  * </ul>
  * </p>
  *
@@ -35,28 +33,13 @@ public class AiConfig {
     private final OpenAiChatModel openAiChatModel;
 
     /**
-     * Model client for interacting with locally hosted Ollama models.
-     */
-    private final OllamaChatModel ollamaChatModel;
-
-    /**
      * Creates a ChatClient backed by OpenAI's chat model.
      *
      * @return ChatClient instance configured for OpenAI
      */
-    @Bean(name = "openAiChatClient")
-    public ChatClient openAiChatClient() {
+    @Bean
+    public ChatClient chatClient() {
         return ChatClient.builder(openAiChatModel).build();
-    }
-
-    /**
-     * Creates a ChatClient backed by Ollama's local model.
-     *
-     * @return ChatClient instance configured for Ollama
-     */
-    @Bean(name = "ollamaChatClient")
-    public ChatClient ollamaChatClient() {
-        return ChatClient.builder(ollamaChatModel).build();
     }
 }
 

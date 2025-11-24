@@ -6,17 +6,6 @@ spring:
   ai:
     openai:
       api-key: ${OPENAI_API_KEY}
-      chat:
-        options:
-          model: gpt-4o
-
-    ollama:
-      api-key: ${OLLAMA_API_KEY}
-      chat:
-        options:
-          model: codellama:latest
-      base-url: http://localhost:11434
-    #   disabling the auto creation of ChatClient.Builder Bean so that we can configure it manually and work with Multiple LLMs
-    chat:
-      client:
-        enabled: false
+#      chat:
+#        options:
+#          model: gpt-4o
