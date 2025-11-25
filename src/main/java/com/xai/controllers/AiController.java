@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * REST controller exposing endpoints for interacting with LLM providers
  * through Spring AI’s {@link ChatClient}.
@@ -80,5 +82,16 @@ public class AiController {
     @GetMapping("/response")
     public ResponseEntity<AiResponse> getResponse(String prompt) {
         return ResponseEntity.ok(aiService.getResponse(prompt));
+    }
+
+    /**
+     * Returns a list of AI responses generated for the given prompt.
+     *
+     * @param prompt the text prompt to send to the AI model
+     * @return a list of {@link AiResponse} wrapped in a {@link ResponseEntity}
+     */
+    @GetMapping("/responses")
+    public ResponseEntity<List<AiResponse>> getResponseList(String prompt) {
+        return ResponseEntity.ok(aiService.getResponseList(prompt));
     }
 }
