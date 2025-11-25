@@ -1,5 +1,6 @@
 package com.xai.controllers;
 
+import com.xai.entities.AiResponse;
 import com.xai.services.AiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
@@ -58,5 +59,26 @@ public class AiController {
     @GetMapping
     public ResponseEntity<String> askOpenAi(@RequestParam String prompt) {
         return ResponseEntity.ok(aiService.chat(prompt));
+    }
+
+    /**
+     * Handles HTTP GET requests for generating an AI response based on the provided prompt.
+     *
+     * <p>This endpoint accepts a text prompt as a query parameter, forwards it to the
+     * {@code aiService} for processing, and returns the generated {@link AiResponse}
+     * wrapped in a {@link ResponseEntity}. The AI service is responsible for invoking
+     * the underlying AI model and mapping the response.</p>
+     *
+     * <p>Example request:</p>
+     * <pre>
+     * GET /response?prompt=Hello
+     * </pre>
+     *
+     * @param prompt the text prompt to send to the AI model; must not be {@code null}
+     * @return a {@link ResponseEntity} containing the generated {@link AiResponse}
+     */
+    @GetMapping("/response")
+    public ResponseEntity<AiResponse> getResponse(String prompt) {
+        return ResponseEntity.ok(aiService.getResponse(prompt));
     }
 }

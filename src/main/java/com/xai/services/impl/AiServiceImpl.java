@@ -1,5 +1,6 @@
 package com.xai.services.impl;
 
+import com.xai.entities.AiResponse;
 import com.xai.services.AiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -83,5 +84,26 @@ public class AiServiceImpl implements AiService {
                 .getText();
 
         return response;
+    }
+
+    /**
+     * Generates an AI response for the given prompt by invoking the chat client.
+     *
+     * <p>This method sends the provided prompt to the underlying {@code chatClient},
+     * executes the request, and maps the returned response into an {@link AiResponse}
+     * object. The {@code chatClient} is expected to handle the communication with the
+     * AI model (e.g., OpenAI or other LLM provider).</p>
+     *
+     * @param prompt the user input or instruction to be processed by the AI model;
+     *               must not be {@code null}
+     * @return an {@link AiResponse} mapped from the model's output
+     * @throws RuntimeException if the chat client call fails or the response cannot be mapped
+     */
+    @Override
+    public AiResponse getResponse(String prompt) {
+        return chatClient
+                .prompt(prompt)
+                .call()
+                .entity(AiResponse.class);
     }
 }
