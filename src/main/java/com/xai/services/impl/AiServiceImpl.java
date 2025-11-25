@@ -2,12 +2,15 @@ package com.xai.services.impl;
 
 import com.xai.services.AiService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.metadata.ChatResponseMetadata;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AiServiceImpl implements AiService {
 
     private final ChatClient chatClient;
@@ -23,11 +26,13 @@ public class AiServiceImpl implements AiService {
          *
          * @return The content returned by the chat client after processing the prompt.
          */
+/*
         var content = chatClient
                 .prompt(prompt)  // Passes the prompt to the chat client.
                 .call()  // Executes the request to the chat client.
                 .content();  // Retrieves the content from the response.
 
+*/
 
         /**
          * Sends a user-specific prompt and a system instruction to the chat client,
@@ -36,12 +41,14 @@ public class AiServiceImpl implements AiService {
          * This method sets both a user prompt and a system message, instructing the
          * chat client to act as an expert in Java. The response content is then fetched.
          */
+/*
         var content1 = chatClient
                 .prompt()  // Creates a new prompt instance.
                 .user("Tell me about Collections Framework in Java")  // Sets the user message for the prompt.
                 .system("Act as an Expert in Java")  // Sets the system message instructing the chat client.
                 .call()  // Executes the request to the chat client.
                 .content();  // Retrieves the content from the response.
+*/
 
         /**
          * Sends a custom user-defined prompt to the chat client and retrieves the content.
@@ -51,12 +58,30 @@ public class AiServiceImpl implements AiService {
          * @param prompt The custom prompt to be sent to the chat client.
          * @return The content returned by the chat client after processing the prompt.
          */
+/*
         Prompt userPrompt = new Prompt(prompt);  // Initializes a new Prompt object with the given prompt.
         var content2 = chatClient
                 .prompt(userPrompt)  // Passes the custom user-defined prompt to the chat client.
                 .call()  // Executes the request to the chat client.
                 .content();  // Retrieves the content from the response.
+*/
 
-        return content2;
+//        Get Metadata of the OpenAI API call
+        ChatResponseMetadata metadata = chatClient
+                .prompt(prompt)
+                .call()
+                .chatResponse()
+                .getMetadata();
+        log.info("metadata: {}", metadata);
+
+//        Another way to get the Response.
+        var response = chatClient.prompt(prompt)
+                .call()
+                .chatResponse()
+                .getResult()
+                .getOutput()
+                .getText();
+
+        return response;
     }
 }
