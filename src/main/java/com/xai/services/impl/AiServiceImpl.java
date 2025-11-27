@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.metadata.ChatResponseMetadata;
+import org.springframework.ai.chat.prompt.ChatOptions;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
@@ -149,5 +150,37 @@ public class AiServiceImpl implements AiService {
                 .call()
                 .entity(new ParameterizedTypeReference<List<AiResponse>>() {
                 });
+    }
+
+    /**
+     * Generates a response from the LLM using prompt-specific generation parameters.
+     * <p>
+     * This method builds a {@link Prompt} with its own ChatOptions such as model,
+     * temperature, max tokens, frequency penalty, presence penalty, and top-p.
+     * These options apply only to this specific prompt invocation.
+     * </p>
+     *
+     * <p><b>Important:</b> Since the generation parameters are defined inside the prompt,
+     * they cannot be reused or shared across different parts of the application.
+     * If the same configuration is needed in multiple places, define global/default
+     * ChatOptions in the Spring AI configuration instead of setting them here.</p>
+     *
+     * @param message the user input or query to send to the LLM
+     * @return the generated response text from the model
+     */
+    @Override
+    public String getResponseUsingPromptDefaults(String message) {
+        Prompt prompt = Prompt.builder()
+                .chatOptions(ChatOptions.builder()
+                        .model("gpt-4o")            // The specific LLM to use for generating responses
+                        .maxTokens(200)             // Maximum length of the generated reply (limits output size)
+                        .temperature(0.5)           // Controls creativity (lower = factual, higher = creative)
+                        .frequencyPenalty(0.2)      // Reduces repeated words or phrases in the response
+                        .presencePenalty(0.1)       // Encourages the model to introduce new ideas or topics
+                        .topP(1.0)
+                        .build())
+                .content(message)
+                .build();
+        return chatClient.prompt(prompt).call().content();
     }
 }
