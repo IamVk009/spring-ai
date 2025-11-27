@@ -6,6 +6,11 @@ spring:
   ai:
     openai:
       api-key: ${OPENAI_API_KEY}
-#      chat:
-#        options:
-#          model: gpt-4o
+      chat:
+        options:
+          model: gpt-4o                 # The specific LLM to use for generating responses
+          max-completion-tokens: 200    # Maximum length of the generated reply (limits output size)
+          temperature: 0.5              # Controls creativity (lower = factual, higher = creative)
+          frequency-penalty: 0.2        # Reduces repeated words or phrases in the response
+          presence-penalty: 0.1         # Encourages the model to introduce new ideas or topics
+          top-p: 1.0                    # Controls diversity of word choices (1.0 = consider all)
