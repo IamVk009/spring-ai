@@ -2,6 +2,7 @@ package com.xai.appconfig;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.prompt.ChatOptions;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,17 +36,32 @@ public class AiConfig {
     private final OpenAiChatModel openAiChatModel;
 
     /**
-     * Creates a {@link ChatClient} bean backed by the configured
-     * {@link OpenAiChatModel}.
+     * Creates and configures the application-wide {@link ChatClient} bean backed by
+     * the provided {@link OpenAiChatModel}.
      *
-     * <p>This client provides a convenient abstraction for sending prompts to
-     * OpenAI and handling responses within Spring-based components.</p>
+     * <p>This client defines global/default {@link ChatOptions} such as model,
+     * temperature, token limits, and penalties. These defaults are applied to every
+     * prompt executed through this {@link ChatClient} unless explicitly overridden
+     * in individual prompt calls.</p>
      *
-     * @return a configured {@link ChatClient} instance
+     * <p><b>Note:</b> Because the options are set at the client level, they are
+     * shared across the entire application. If different endpoints or services
+     * require different LLM settings, they must override these defaults per prompt.</p>
+     *
+     * @return a fully configured {@link ChatClient} instance with default LLM options
      */
     @Bean
     public ChatClient chatClient() {
-        return ChatClient.builder(openAiChatModel).build();
+        return ChatClient.builder(openAiChatModel)
+                .defaultOptions(ChatOptions.builder()
+                        .model("gpt-4o")            // The specific LLM to use for generating responses
+                        .maxTokens(300)             // Maximum length of the generated reply (limits output size)
+                        .temperature(0.5)           // Controls creativity (lower = factual, higher = creative)
+                        .frequencyPenalty(0.2)      // Reduces repeated words or phrases in the response
+                        .presencePenalty(0.1)       // Encourages the model to introduce new ideas or topics
+                        .topP(1.0)
+                        .build())
+                .build();
     }
 }
 
