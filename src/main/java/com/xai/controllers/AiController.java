@@ -134,4 +134,17 @@ public class AiController {
     public ResponseEntity<String> getResponseUsingSystemAndUserPromptTemplate() {
         return ResponseEntity.ok(aiService.getResponseUsingSystemAndUserPromptTemplate());
     }
+
+    /**
+     * HTTP GET endpoint to generate a response using the AI service's fluent API.
+     * <p>
+     * Delegates to the AI service, which defines system and user prompts fluently
+     * and returns the generated response.
+     *
+     * @return HTTP 200 OK with the AI-generated content.
+     */
+    @GetMapping("/fluent")
+    public ResponseEntity<String> getResponseUsingFluentApi() {
+        return ResponseEntity.ok(aiService.getResponseUsingFluentApi());
+    }
 }
