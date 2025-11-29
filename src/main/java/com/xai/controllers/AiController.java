@@ -121,4 +121,17 @@ public class AiController {
     public ResponseEntity<String> getResponseUsingPromptTemplate() {
         return ResponseEntity.ok(aiService.getResponseUsingPromptTemplate());
     }
+
+    /**
+     * HTTP GET endpoint to generate a response using both system and user prompt templates.
+     * <p>
+     * Calls the AI service to process the combined system and user prompts and returns
+     * the generated result.
+     *
+     * @return HTTP 200 OK with the AI-generated response content.
+     */
+    @GetMapping("/prompt/template/system/user")
+    public ResponseEntity<String> getResponseUsingSystemAndUserPromptTemplate() {
+        return ResponseEntity.ok(aiService.getResponseUsingSystemAndUserPromptTemplate());
+    }
 }

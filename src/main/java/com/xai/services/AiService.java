@@ -15,4 +15,6 @@ public interface AiService {
     String getResponseUsingPromptDefaults(String prompt);
 
     String getResponseUsingPromptTemplate();
+
+    String getResponseUsingSystemAndUserPromptTemplate();
 }
