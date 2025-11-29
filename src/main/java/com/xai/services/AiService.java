@@ -13,4 +13,6 @@ public interface AiService {
     List<AiResponse> getResponseList(String prompt);
 
     String getResponseUsingPromptDefaults(String prompt);
+
+    String getResponseUsingPromptTemplate();
 }

@@ -8,10 +8,12 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.metadata.ChatResponseMetadata;
 import org.springframework.ai.chat.prompt.ChatOptions;
 import org.springframework.ai.chat.prompt.Prompt;
+import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -181,6 +183,39 @@ public class AiServiceImpl implements AiService {
                         .build())
                 .content(message)
                 .build();
+        return chatClient.prompt(prompt).call().content();
+    }
+
+    /**
+     * Generates a response from the LLM using a predefined prompt template.
+     * <p>
+     * This method performs the following steps:
+     * <ol>
+     *   <li>Creates a prompt template containing placeholders.</li>
+     *   <li>Renders the template by injecting actual values for the placeholders.</li>
+     *   <li>Constructs a prompt with the rendered text.</li>
+     *   <li>Calls the LLM using the chat client and returns its response.</li>
+     * </ol>
+     *
+     * @return The generated content returned by the LLM.
+     */
+    @Override
+    public String getResponseUsingPromptTemplate() {
+//          Step 1: Create a Prompt Template
+        PromptTemplate promptTemplate = PromptTemplate.builder()
+                .template("Explain briefly about {sport} in 100 words, and also provide a short summary of {playerName}.")
+                .build();
+
+//          Step 2: Render the template with actual values
+        String renderedMessage = promptTemplate.render(Map.of(
+                "sport", "Football",
+                "playerName", "Harry Kane"
+        ));
+
+//         Step 3: Create the final Prompt using the rendered message
+        Prompt prompt = new Prompt(renderedMessage);
+
+//        Step 4: Call the LLM using chatClient
         return chatClient.prompt(prompt).call().content();
     }
 }

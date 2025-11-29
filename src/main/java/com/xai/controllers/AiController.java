@@ -108,4 +108,17 @@ public class AiController {
     public ResponseEntity<String> getResponseUsingPromptDefaults(String prompt) {
         return ResponseEntity.ok(aiService.getResponseUsingPromptDefaults(prompt));
     }
+
+    /**
+     * Endpoint to fetch a response generated using a prompt template.
+     * <p>
+     * Delegates the request to the AI service, which constructs and processes
+     * the prompt template, then returns the generated output.
+     *
+     * @return HTTP 200 OK with the LLM-generated response.
+     */
+    @GetMapping("/prompt/template")
+    public ResponseEntity<String> getResponseUsingPromptTemplate() {
+        return ResponseEntity.ok(aiService.getResponseUsingPromptTemplate());
+    }
 }
