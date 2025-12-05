@@ -147,4 +147,20 @@ public class AiController {
     public ResponseEntity<String> getResponseUsingFluentApi() {
         return ResponseEntity.ok(aiService.getResponseUsingFluentApi());
     }
+
+    /**
+     * Handles HTTP GET requests for generating a response using prompts
+     * loaded from external files.
+     * <p>
+     * This endpoint delegates to the AI service, which loads the system and
+     * user prompt templates, injects dynamic parameters, and returns the
+     * model-generated response.
+     * </p>
+     *
+     * @return HTTP 200 OK containing the AI-generated response text.
+     */
+    @GetMapping("/response/external")
+    public ResponseEntity<String> getResponseByFetchingPromptFromExternalFiles() {
+        return ResponseEntity.ok(aiService.getResponseByFetchingPromptFromExternalFiles());
+    }
 }

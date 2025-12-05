@@ -19,4 +19,6 @@ public interface AiService {
     String getResponseUsingSystemAndUserPromptTemplate();
 
     String getResponseUsingFluentApi();
+
+    String getResponseByFetchingPromptFromExternalFiles();
 }
